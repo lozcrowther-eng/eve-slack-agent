@@ -1,6 +1,7 @@
 import { get, put } from "@vercel/blob";
 
 import seedDeals from "../../data/deals.json" with { type: "json" };
+import coralCoastInsurance from "../../data/transcripts/coral-coast-insurance.md" with { type: "text" };
 import harbourlineBank from "../../data/transcripts/harbourline-bank.md" with { type: "text" };
 import indusMart from "../../data/transcripts/indus-mart.md" with { type: "text" };
 import kestrelTravel from "../../data/transcripts/kestrel-travel.md" with { type: "text" };
@@ -9,6 +10,10 @@ import sakuraMobility from "../../data/transcripts/sakura-mobility.md" with { ty
 
 export const TECH_STATUSES = ["Win", "Loss", "Undecided"] as const;
 export type TechStatus = (typeof TECH_STATUSES)[number];
+
+/** POC health, computed by the agent (see instructions.md): Green, Yellow (gap + workaround) or Red (blocker). */
+export const SENTIMENTS = ["Green", "Yellow", "Red"] as const;
+export type Sentiment = (typeof SENTIMENTS)[number];
 
 export interface TechDecision {
   status: TechStatus;
@@ -52,6 +57,7 @@ function decodeTextModule(value: string): string {
 
 const transcripts: Record<string, string> = Object.fromEntries(
   Object.entries({
+    "coral-coast-insurance": coralCoastInsurance,
     "harbourline-bank": harbourlineBank,
     "indus-mart": indusMart,
     "kestrel-travel": kestrelTravel,
@@ -87,10 +93,22 @@ async function readStored(dealId: string): Promise<StoredDecisions | null> {
   }
 }
 
+type CurrentDecision = TechDecision & {
+  source: "blob" | "seed";
+  /** The decision this one replaced, when an SA has updated the deal. */
+  previous?: { status: TechStatus; confidence: number; updatedAt: string };
+};
+
 /** The latest decision for a deal: the stored one if an SA has updated it, else the seed. */
-export async function getCurrentDecision(deal: Deal): Promise<TechDecision & { source: "blob" | "seed" }> {
+export async function getCurrentDecision(deal: Deal): Promise<CurrentDecision> {
   const stored = await readStored(deal.id);
-  return stored ? { ...stored.current, source: "blob" } : { ...deal.baseline, source: "seed" };
+  if (!stored) return { ...deal.baseline, source: "seed" };
+  const last = stored.history.at(-1);
+  return {
+    ...stored.current,
+    source: "blob",
+    ...(last ? { previous: { status: last.status, confidence: last.confidence, updatedAt: last.updatedAt } } : {}),
+  };
 }
 
 export async function saveDecision(deal: Deal, decision: TechDecision): Promise<void> {
