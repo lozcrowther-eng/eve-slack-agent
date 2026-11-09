@@ -46,7 +46,7 @@
       "evidence": [
         "Platform engineering team owns a mature Terraform/CloudFront pipeline and prefers to keep building on AWS.",
         "Digital channels GM is frustrated by 2-week release cycles for onboarding flows.",
-        "APRA CPS 234 security review is in progress with no blockers raised yet."
+        "Grace accepted flattened Entra ID groups as an interim workaround for the nested-group SCIM gap (call notes 2026-11-05)."
       ],
       "nextStep": "Deliver Secure Compute and SSO/SCIM architecture walkthrough to the security architect.",
       "updatedAt": "2026-10-30T02:00:00.000Z",
@@ -177,13 +177,13 @@
     "ae": "Kavya Nair",
     "baseline": {
       "status": "Undecided",
-      "confidence": 50,
+      "confidence": 35,
       "evidence": [
         "Storefront fell over during last year's festive sale on a self-managed EKS + CloudFront setup.",
-        "Platform team believes they can fix it by tuning autoscaling on AWS.",
-        "Commerce head wants a decision before the January sale planning freeze."
+        "Commerce head wants a decision before the January sale planning freeze.",
+        "Payment gateway team flagged that checkout must use allow-listed static egress IPs in India; blocks go-live (call notes 2026-11-07)."
       ],
-      "nextStep": "Run the joint load test simulating 10x festive traffic on the product listing pages.",
+      "nextStep": "Rohan to get product confirmation on static egress IPs in bom1 for the payment gateway allow-list by 2026-11-14.",
       "updatedAt": "2026-10-31T05:00:00.000Z",
       "updatedBy": "seed"
     }
