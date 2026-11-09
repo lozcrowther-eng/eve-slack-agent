@@ -34,6 +34,11 @@
 - Owen still prefers to keep building: "If we can get CloudFront Functions doing the personalization, we don't need this."
 - No executive sponsor above Leila yet; CIO hasn't been briefed.
 
+**Product gap and workaround**
+- SCIM provisioning from Entra ID can't map the bank's nested security groups to Vercel project roles.
+- Workaround agreed: flatten into 4 Entra groups (viewer, developer, release manager, admin) mapped to team roles. Grace accepted this as an interim control and logged it in the CPS 234 review as a known gap, not a blocker.
+
 **Next steps**
 - Daniel to deliver the FTE vs platform cost model by 2026-11-13.
+- Daniel to log a feature request for nested-group SCIM mapping.
 - Leila to brief the CIO.

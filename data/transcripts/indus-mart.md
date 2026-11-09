@@ -32,8 +32,12 @@
 
 **Risks**
 - Vikram's team will own running the AWS side of the test; risk of a biased comparison.
-- Payment gateway team hasn't been looped in on the checkout path.
+
+**Blocker**
+- Payment gateway team joined late in the call: their gateway partner only accepts checkout requests from fixed, allow-listed egress IPs inside India. Sneha: "If we can't give them static IPs in Mumbai, checkout can't go live on Vercel. There's no workaround they'll accept."
+- Rohan has escalated to product to confirm static egress IPs in bom1. Until then the storefront can move but checkout cannot.
 
 **Next steps**
 - Run both load tests the week of 2026-11-16.
+- Rohan to get product confirmation on bom1 static egress by 2026-11-14.
 - Kavya to set up exec readout with Ananya after results.

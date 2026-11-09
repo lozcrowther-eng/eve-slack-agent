@@ -34,6 +34,10 @@
 - SI's revenue depends on the custom build; they may resist.
 - No date set for a decision; digital marketing's budget cycle closes in March.
 
+**Product gap and workaround**
+- 3D configurator model assets are ~300 MB per vehicle, too large to ship inside a deployment.
+- Workaround: host the assets in Vercel Blob and stream them through the CDN, with the configurator loading them on demand. The SI ran a spike on one model and load times were acceptable on 4G.
+
 **Next steps**
 - Propose a one-market pilot (AU) with success criteria.
 - Kenji to explore SI partnership enablement so they can deliver on Vercel.

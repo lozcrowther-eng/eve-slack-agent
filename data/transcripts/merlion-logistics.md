@@ -34,6 +34,11 @@
 - Benjamin did not attend; Aisha says he's focused on a cost-reduction mandate from the CFO this quarter.
 - Thailand subsidiary runs separate IT and may want its own decision.
 
+**Product gap and workaround**
+- Thailand subsidiary's data-residency rule requires carrier PII to be processed in Thailand; there is no Bangkok compute region.
+- Workaround: keep the TH carrier API in AWS ap-southeast-7 (Bangkok) and render the TH portal pages without PII, calling that API from the browser. Aisha's team validated it in the trial; TH IT still needs to sign off.
+
 **Next steps**
+- Aisha to walk TH IT through the data-residency workaround.
 - Wei Ling to send TCO model to Benjamin by 2026-11-11.
 - Aisha to write up developer-productivity findings for Benjamin.
