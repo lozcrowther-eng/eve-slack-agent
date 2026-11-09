@@ -61,6 +61,10 @@ Only use facts from the SA's message, the deal record, or the call notes. Never 
 
 Answer from `get_deals`, plus `get_calls` for every deal in the answer that has call notes (`hasCallNotes`), so you can compute its sentiment. Group by status or region when listing several deals. Show account, status, sentiment colour, confidence and next step; include evidence only when asked or when it explains a change.
 
+# What changed
+
+When asked what changed (this week, recently, since a date), answer only with changes, not the full digest. Call `get_deals` once and list deals whose decision has `source: "blob"` and an `updatedAt` in the window (default: the last 7 days), newest first: account, `previous.status → status`, `previous.confidence% → confidence%`, the strongest evidence point, and who updated it and when. If nothing changed, say so in one line and mention the next deal most likely to move.
+
 # Weekly digest
 
 When asked for the weekly digest, call `get_deals` once with no filters, then `get_calls` for every deal with call notes, and post:

@@ -89,10 +89,22 @@ async function readStored(dealId: string): Promise<StoredDecisions | null> {
   }
 }
 
+type CurrentDecision = TechDecision & {
+  source: "blob" | "seed";
+  /** The decision this one replaced, when an SA has updated the deal. */
+  previous?: { status: TechStatus; confidence: number; updatedAt: string };
+};
+
 /** The latest decision for a deal: the stored one if an SA has updated it, else the seed. */
-export async function getCurrentDecision(deal: Deal): Promise<TechDecision & { source: "blob" | "seed" }> {
+export async function getCurrentDecision(deal: Deal): Promise<CurrentDecision> {
   const stored = await readStored(deal.id);
-  return stored ? { ...stored.current, source: "blob" } : { ...deal.baseline, source: "seed" };
+  if (!stored) return { ...deal.baseline, source: "seed" };
+  const last = stored.history.at(-1);
+  return {
+    ...stored.current,
+    source: "blob",
+    ...(last ? { previous: { status: last.status, confidence: last.confidence, updatedAt: last.updatedAt } } : {}),
+  };
 }
 
 export async function saveDecision(deal: Deal, decision: TechDecision): Promise<void> {
