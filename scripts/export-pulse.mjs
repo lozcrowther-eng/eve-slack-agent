@@ -13,6 +13,7 @@ import { get, list, put } from "@vercel/blob";
 const EXPORT_PATH = "exports/pulse-sample.json";
 const DECISIONS_PREFIX = "tech-decisions/";
 const PENDING_PREFIX = "pending-approvals/";
+const SENTIMENT_PREFIX = "sentiment/";
 
 const deals = JSON.parse(readFileSync(new URL("../data/deals.json", import.meta.url), "utf8"));
 const transcriptIds = new Set(["coral-coast-insurance", "harbourline-bank", "indus-mart", "kestrel-travel", "merlion-logistics", "sakura-mobility"]);
@@ -45,15 +46,22 @@ const pendingApprovals = (await Promise.all((await listAll(PENDING_PREFIX)).map(
   .filter(Boolean)
   .sort((a, b) => a.requestedAt.localeCompare(b.requestedAt));
 
+const sentiments = new Map(
+  (await Promise.all((await listAll(SENTIMENT_PREFIX)).map((blob) => readJson(blob.pathname)))).filter(Boolean).map((s) => [s.dealId, s]),
+);
+
 const exportedDeals = deals.map((deal) => {
   const record = stored.get(deal.id);
+  const currentDecision = record ? { ...record.current, source: "blob" } : { ...deal.baseline, source: "seed" };
+  const sentiment = sentiments.get(deal.id);
   return {
     ...deal,
     hasCallNotes: transcriptIds.has(deal.id),
-    currentDecision: record ? { ...record.current, source: "blob" } : { ...deal.baseline, source: "seed" },
+    currentDecision,
     history: record?.history ?? [],
     storage: record ? { blobPathname: record.blobPathname, blobUploadedAt: record.blobUploadedAt } : null,
     pendingApprovals: pendingApprovals.filter((p) => p.dealId === deal.id),
+    sentiment: sentiment ? { ...sentiment, stale: sentiment.basedOnDecisionAt !== currentDecision.updatedAt } : null,
   };
 });
 

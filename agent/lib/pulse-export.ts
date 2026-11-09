@@ -1,11 +1,23 @@
 import { del, get, list, put } from "@vercel/blob";
 
-import { deals, getTranscript, type TechDecision } from "./deals.ts";
+import { deals, getTranscript, type Sentiment, type TechDecision } from "./deals.ts";
 
 // The dashboard reads this blob (PULSE_DATA_URL). Same schema as scripts/export-pulse.mjs.
 export const PULSE_EXPORT_PATH = "exports/pulse-sample.json";
 const DECISIONS_PREFIX = "tech-decisions/";
 const PENDING_PREFIX = "pending-approvals/";
+const SENTIMENT_PREFIX = "sentiment/";
+
+/** The agent's last computed POC sentiment for a deal: a cache, recomputed on request. */
+export interface SentimentAssessment {
+  dealId: string;
+  sentiment: Sentiment;
+  reason: string;
+  source: string;
+  assessedAt: string;
+  /** updatedAt of the decision it was computed against; a newer decision makes it stale. */
+  basedOnDecisionAt: string;
+}
 
 export interface PendingApproval {
   requestId: string;
@@ -59,9 +71,17 @@ export async function clearPendingApproval(requestId: string): Promise<void> {
   await del(`${PENDING_PREFIX}${requestId}.json`);
 }
 
-/** Rebuild exports/pulse-sample.json from the seed deals, stored decisions and pending approvals. */
+export async function recordSentiment(assessments: SentimentAssessment[]): Promise<void> {
+  await Promise.all(assessments.map((a) => putJson(`${SENTIMENT_PREFIX}${a.dealId}.json`, a)));
+}
+
+/** Rebuild exports/pulse-sample.json from the seed deals, stored decisions, pending approvals and cached sentiment. */
 export async function writePulseExport(): Promise<void> {
-  const [decisionBlobs, pendingBlobs] = await Promise.all([listAll(DECISIONS_PREFIX), listAll(PENDING_PREFIX)]);
+  const [decisionBlobs, pendingBlobs, sentimentBlobs] = await Promise.all([
+    listAll(DECISIONS_PREFIX),
+    listAll(PENDING_PREFIX),
+    listAll(SENTIMENT_PREFIX),
+  ]);
 
   const stored = new Map<string, StoredDecisions & { blobPathname: string; blobUploadedAt: string }>();
   await Promise.all(
@@ -77,15 +97,24 @@ export async function writePulseExport(): Promise<void> {
     .filter((p): p is PendingApproval => p !== null)
     .sort((a, b) => a.requestedAt.localeCompare(b.requestedAt));
 
+  const sentiments = new Map(
+    (await Promise.all(sentimentBlobs.map((blob) => readJson<SentimentAssessment>(blob.pathname))))
+      .filter((s): s is SentimentAssessment => s !== null)
+      .map((s) => [s.dealId, s]),
+  );
+
   const exportedDeals = deals.map((deal) => {
     const record = stored.get(deal.id);
+    const currentDecision = record ? { ...record.current, source: "blob" as const } : { ...deal.baseline, source: "seed" as const };
+    const sentiment = sentiments.get(deal.id);
     return {
       ...deal,
       hasCallNotes: getTranscript(deal.id) !== undefined,
-      currentDecision: record ? { ...record.current, source: "blob" as const } : { ...deal.baseline, source: "seed" as const },
+      currentDecision,
       history: record?.history ?? [],
       storage: record ? { blobPathname: record.blobPathname, blobUploadedAt: record.blobUploadedAt } : null,
       pendingApprovals: pendingApprovals.filter((p) => p.dealId === deal.id),
+      sentiment: sentiment ? { ...sentiment, stale: sentiment.basedOnDecisionAt !== currentDecision.updatedAt } : null,
     };
   });
 

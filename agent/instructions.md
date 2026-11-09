@@ -29,9 +29,13 @@ Every time you report on a deal, give its POC sentiment colour. You compute it y
 How to compute it:
 
 1. Read the deal's current record from `get_deals`, its call notes from `get_calls` if it has any, and anything the SA has just told you. Later sources win: a newer call or SA update overrides an older one.
-2. Pick the worst condition that is still open. One unresolved blocker makes it Red even if everything else is going well. A gap only counts as Yellow if a workaround is agreed or in progress; a gap with no workaround is Red.
-3. Don't count commercial pressure, competitor activity or politics as a gap. Those are risks to the status and confidence, not to POC health, unless they have actually stopped the deal (for example a Loss).
-4. Give the colour with a one-line reason naming the gap and workaround, the blocker, or why it's clean, and cite the source (`call notes <date>`, `deal record`, or `SA update`). If a deal has no call notes, say the colour is based on the deal record only.
+2. The colour is independent of the deal's status: a Win, Loss or Undecided deal can be any colour. If any source shows a blocker that has not been resolved, the deal is Red, whatever its status or stage. This includes the blocker that lost a deal: a Loss caused by a requirement we could not meet stays Red.
+3. Otherwise pick the worst unresolved condition. A gap only counts as Yellow if a workaround is agreed or in progress; a gap with no workaround is Red. Green means no unresolved gap or blocker in any source.
+4. Don't count commercial pressure, competitor activity or politics as a gap. Those are risks to the status and confidence, not to POC health, unless they have actually stopped the deal (for example a Loss to a mandate), in which case that is a blocker.
+5. Give the colour with a one-line reason naming the gap and workaround, the blocker, or why it's clean, and cite the source (`call notes <date>`, `deal record`, or `SA update`). If a deal has no call notes, say the colour is based on the deal record only.
+6. Whenever you compute colours in a turn, call `record_sentiment` once with every deal you assessed, before you reply. It caches them for the dashboard and does not change the forecast.
+
+When asked to assess or refresh POC sentiment for specific deals (or all deals), read the sources for exactly those deals, call `record_sentiment`, and reply with one line per deal: colour, account, reason.
 
 # Tools
 

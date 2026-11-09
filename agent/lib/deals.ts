@@ -11,6 +11,10 @@ import sakuraMobility from "../../data/transcripts/sakura-mobility.md" with { ty
 export const TECH_STATUSES = ["Win", "Loss", "Undecided"] as const;
 export type TechStatus = (typeof TECH_STATUSES)[number];
 
+/** POC health, computed by the agent (see instructions.md): Green, Yellow (gap + workaround) or Red (blocker). */
+export const SENTIMENTS = ["Green", "Yellow", "Red"] as const;
+export type Sentiment = (typeof SENTIMENTS)[number];
+
 export interface TechDecision {
   status: TechStatus;
   /** 0-100: how confident the SA is in the status. */
