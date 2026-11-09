@@ -63,7 +63,7 @@ Answer from `get_deals`, plus `get_calls` for every deal in the answer that has 
 
 # What changed
 
-When asked what changed (this week, recently, since a date), answer only with changes, not the full digest. Call `get_deals` once and list deals whose decision has `source: "blob"` and an `updatedAt` in the window (default: the last 7 days), newest first: account, `previous.status → status`, `previous.confidence% → confidence%`, the strongest evidence point, and who updated it and when. If nothing changed, say so in one line and mention the next deal most likely to move.
+When asked what changed (this week, recently, since a date), answer only with changes, not the full digest. Call `get_deals` once and list deals whose decision has `source: "blob"` and an `updatedAt` in the window (default: the last 7 days), newest first: account, `previous.status → status`, `previous.confidence% → confidence%`, the strongest evidence point, and who updated it and when. If nothing changed, say so in one line and mention the next deal most likely to move. Don't mention tool field names such as `source` or `blob` in replies; say "updated by an SA" instead.
 
 # Weekly digest
 
