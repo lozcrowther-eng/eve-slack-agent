@@ -1,6 +1,7 @@
 import { get, put } from "@vercel/blob";
 
 import seedDeals from "../../data/deals.json" with { type: "json" };
+import coralCoastInsurance from "../../data/transcripts/coral-coast-insurance.md" with { type: "text" };
 import harbourlineBank from "../../data/transcripts/harbourline-bank.md" with { type: "text" };
 import indusMart from "../../data/transcripts/indus-mart.md" with { type: "text" };
 import kestrelTravel from "../../data/transcripts/kestrel-travel.md" with { type: "text" };
@@ -52,6 +53,7 @@ function decodeTextModule(value: string): string {
 
 const transcripts: Record<string, string> = Object.fromEntries(
   Object.entries({
+    "coral-coast-insurance": coralCoastInsurance,
     "harbourline-bank": harbourlineBank,
     "indus-mart": indusMart,
     "kestrel-travel": kestrelTravel,

@@ -15,7 +15,7 @@ const DECISIONS_PREFIX = "tech-decisions/";
 const PENDING_PREFIX = "pending-approvals/";
 
 const deals = JSON.parse(readFileSync(new URL("../data/deals.json", import.meta.url), "utf8"));
-const transcriptIds = new Set(["harbourline-bank", "indus-mart", "kestrel-travel", "merlion-logistics", "sakura-mobility"]);
+const transcriptIds = new Set(["coral-coast-insurance", "harbourline-bank", "indus-mart", "kestrel-travel", "merlion-logistics", "sakura-mobility"]);
 
 async function readJson(pathname) {
   const result = await get(pathname, { access: "private", useCache: false });

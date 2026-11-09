@@ -88,22 +88,22 @@
     "city": "Brisbane",
     "industry": "Insurance",
     "opportunityArrUsd": 310000,
-    "salesStage": "Closed Lost",
-    "closeQuarter": "FY26 Q4",
+    "salesStage": "Security Review",
+    "closeQuarter": "FY27 Q1",
     "competitor": "build on AWS",
-    "useCase": "Quote-and-buy journeys for home and motor insurance.",
+    "useCase": "Quote-and-buy journeys for home and motor insurance; replace a WordPress + Lambda stack.",
     "sa": "Daniel Okafor",
     "ae": "Sophie Tran",
     "baseline": {
-      "status": "Loss",
-      "confidence": 90,
+      "status": "Undecided",
+      "confidence": 25,
       "evidence": [
-        "Group IT mandated consolidating all workloads on the existing AWS Enterprise Discount Program.",
-        "AWS funded a professional-services migration that offset the engineering cost.",
-        "Champion (Head of Digital) left the business mid-evaluation."
+        "Digital team finished the POC and wants Vercel: quote journey p95 dropped from 2.4s to 600ms.",
+        "Group Risk requires customer-managed encryption keys (BYOK) for quote PII and has rejected the proposed workaround (call notes 2026-11-04).",
+        "Group IT is pushing to consolidate on the existing AWS Enterprise Discount Program and is using the BYOK gap to argue for building on AWS."
       ],
-      "nextStep": "Keep in touch with the digital team; revisit at the AWS EDP renewal in 2027.",
-      "updatedAt": "2026-10-02T03:00:00.000Z",
+      "nextStep": "Daniel to escalate the BYOK requirement to product and bring a roadmap answer to Group Risk by 2026-11-18.",
+      "updatedAt": "2026-11-04T05:00:00.000Z",
       "updatedBy": "seed"
     }
   },
