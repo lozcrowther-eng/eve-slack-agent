@@ -1,0 +1,272 @@
+[
+  {
+    "id": "kestrel-travel",
+    "account": "Kestrel Travel Group",
+    "region": "ANZ",
+    "country": "Australia",
+    "city": "Sydney",
+    "industry": "Travel & Hospitality",
+    "opportunityArrUsd": 420000,
+    "salesStage": "Technical Validation",
+    "closeQuarter": "FY27 Q1",
+    "competitor": "Netlify",
+    "useCase": "Replatform the consumer booking site and fare landing pages (Next.js) for peak-sale traffic and faster marketing launches.",
+    "sa": "Priya Raman",
+    "ae": "Tom Gallagher",
+    "baseline": {
+      "status": "Undecided",
+      "confidence": 50,
+      "evidence": [
+        "Booking site is already Next.js; frontend team is running a side-by-side POC on Vercel and Netlify.",
+        "Black Friday fare sale in 3 weeks is the forcing event for the decision.",
+        "Netlify is the incumbent for the marketing site and CTO is anchored on its current pricing."
+      ],
+      "nextStep": "Run the load test on the fare search pages with Kestrel's platform team.",
+      "updatedAt": "2026-10-28T23:00:00.000Z",
+      "updatedBy": "seed"
+    }
+  },
+  {
+    "id": "harbourline-bank",
+    "account": "Harbourline Bank",
+    "region": "ANZ",
+    "country": "Australia",
+    "city": "Melbourne",
+    "industry": "Financial Services",
+    "opportunityArrUsd": 780000,
+    "salesStage": "Security Review",
+    "closeQuarter": "FY27 Q2",
+    "competitor": "build on AWS",
+    "useCase": "Customer onboarding and loan-application frontends; replace an in-house CloudFront + ECS stack.",
+    "sa": "Daniel Okafor",
+    "ae": "Sophie Tran",
+    "baseline": {
+      "status": "Undecided",
+      "confidence": 40,
+      "evidence": [
+        "Platform engineering team owns a mature Terraform/CloudFront pipeline and prefers to keep building on AWS.",
+        "Digital channels GM is frustrated by 2-week release cycles for onboarding flows.",
+        "APRA CPS 234 security review is in progress with no blockers raised yet."
+      ],
+      "nextStep": "Deliver Secure Compute and SSO/SCIM architecture walkthrough to the security architect.",
+      "updatedAt": "2026-10-30T02:00:00.000Z",
+      "updatedBy": "seed"
+    }
+  },
+  {
+    "id": "kowhai-energy",
+    "account": "Kōwhai Energy",
+    "region": "ANZ",
+    "country": "New Zealand",
+    "city": "Auckland",
+    "industry": "Energy & Utilities",
+    "opportunityArrUsd": 190000,
+    "salesStage": "Commercials",
+    "closeQuarter": "FY26 Q4",
+    "competitor": "AWS Amplify",
+    "useCase": "Customer self-service portal and outage map with real-time data.",
+    "sa": "Priya Raman",
+    "ae": "Tom Gallagher",
+    "baseline": {
+      "status": "Win",
+      "confidence": 85,
+      "evidence": [
+        "Engineering lead signed off on Vercel after Amplify build times exceeded 20 minutes in the POC.",
+        "Outage map served from the edge cut p95 latency from 1.8s to 300ms in testing.",
+        "Architecture review board approved Vercel as the frontend platform on 2026-10-14."
+      ],
+      "nextStep": "Support procurement on the Enterprise order form; plan onboarding for the platform team.",
+      "updatedAt": "2026-10-15T01:00:00.000Z",
+      "updatedBy": "seed"
+    }
+  },
+  {
+    "id": "coral-coast-insurance",
+    "account": "Coral Coast Insurance",
+    "region": "ANZ",
+    "country": "Australia",
+    "city": "Brisbane",
+    "industry": "Insurance",
+    "opportunityArrUsd": 310000,
+    "salesStage": "Closed Lost",
+    "closeQuarter": "FY26 Q4",
+    "competitor": "build on AWS",
+    "useCase": "Quote-and-buy journeys for home and motor insurance.",
+    "sa": "Daniel Okafor",
+    "ae": "Sophie Tran",
+    "baseline": {
+      "status": "Loss",
+      "confidence": 90,
+      "evidence": [
+        "Group IT mandated consolidating all workloads on the existing AWS Enterprise Discount Program.",
+        "AWS funded a professional-services migration that offset the engineering cost.",
+        "Champion (Head of Digital) left the business mid-evaluation."
+      ],
+      "nextStep": "Keep in touch with the digital team; revisit at the AWS EDP renewal in 2027.",
+      "updatedAt": "2026-10-02T03:00:00.000Z",
+      "updatedBy": "seed"
+    }
+  },
+  {
+    "id": "merlion-logistics",
+    "account": "Merlion Logistics",
+    "region": "Singapore",
+    "country": "Singapore",
+    "city": "Singapore",
+    "industry": "Logistics",
+    "opportunityArrUsd": 260000,
+    "salesStage": "Technical Validation",
+    "closeQuarter": "FY27 Q1",
+    "competitor": "AWS Amplify",
+    "useCase": "Shipper and carrier portals across 6 SEA markets with localized content.",
+    "sa": "Wei Ling Tan",
+    "ae": "Arjun Mehta",
+    "baseline": {
+      "status": "Undecided",
+      "confidence": 45,
+      "evidence": [
+        "Team is already on AWS and Amplify is the default because of existing Cognito usage.",
+        "Localization for 6 markets is slow to ship today; ISR + i18n routing resonated in the demo.",
+        "VP Engineering wants a cost comparison before committing."
+      ],
+      "nextStep": "Share a TCO comparison vs Amplify including build minutes and bandwidth.",
+      "updatedAt": "2026-10-29T06:00:00.000Z",
+      "updatedBy": "seed"
+    }
+  },
+  {
+    "id": "straits-pay",
+    "account": "Straits Pay",
+    "region": "Singapore",
+    "country": "Singapore",
+    "city": "Singapore",
+    "industry": "Fintech",
+    "opportunityArrUsd": 340000,
+    "salesStage": "Negotiation",
+    "closeQuarter": "FY26 Q4",
+    "competitor": "Netlify",
+    "useCase": "Merchant dashboard and developer docs; AI-assisted support widget.",
+    "sa": "Wei Ling Tan",
+    "ae": "Arjun Mehta",
+    "baseline": {
+      "status": "Win",
+      "confidence": 80,
+      "evidence": [
+        "CTO chose Vercel for AI SDK + AI Gateway support; Netlify had no equivalent for their support widget.",
+        "MAS TRM controls mapped to Vercel's SOC 2 and ISO 27001 reports with no gaps.",
+        "Frontend team migrated docs site in a 2-day spike and kept preview deployments."
+      ],
+      "nextStep": "Finalize Enterprise terms; schedule migration kickoff for the merchant dashboard.",
+      "updatedAt": "2026-10-21T04:00:00.000Z",
+      "updatedBy": "seed"
+    }
+  },
+  {
+    "id": "indus-mart",
+    "account": "Indus Mart",
+    "region": "India",
+    "country": "India",
+    "city": "Bengaluru",
+    "industry": "Retail & E-commerce",
+    "opportunityArrUsd": 520000,
+    "salesStage": "Technical Validation",
+    "closeQuarter": "FY27 Q1",
+    "competitor": "build on AWS",
+    "useCase": "Headless storefront for festive-season traffic (Diwali/Big Billion-style sale peaks).",
+    "sa": "Rohan Iyer",
+    "ae": "Kavya Nair",
+    "baseline": {
+      "status": "Undecided",
+      "confidence": 50,
+      "evidence": [
+        "Storefront fell over during last year's festive sale on a self-managed EKS + CloudFront setup.",
+        "Platform team believes they can fix it by tuning autoscaling on AWS.",
+        "Commerce head wants a decision before the January sale planning freeze."
+      ],
+      "nextStep": "Run the joint load test simulating 10x festive traffic on the product listing pages.",
+      "updatedAt": "2026-10-31T05:00:00.000Z",
+      "updatedBy": "seed"
+    }
+  },
+  {
+    "id": "nilgiri-health",
+    "account": "Nilgiri Health",
+    "region": "India",
+    "country": "India",
+    "city": "Hyderabad",
+    "industry": "Healthcare",
+    "opportunityArrUsd": 150000,
+    "salesStage": "Closed Lost",
+    "closeQuarter": "FY26 Q3",
+    "competitor": "AWS Amplify",
+    "useCase": "Patient appointment booking and telehealth web app.",
+    "sa": "Rohan Iyer",
+    "ae": "Kavya Nair",
+    "baseline": {
+      "status": "Loss",
+      "confidence": 85,
+      "evidence": [
+        "Required all patient data and compute in an India region with a signed local hosting attestation.",
+        "Amplify was bundled into an existing AWS credits program at near-zero cost.",
+        "App is a small SPA with low traffic, so performance was not a differentiator."
+      ],
+      "nextStep": "None; closed lost. Revisit if they launch the planned consumer health content site.",
+      "updatedAt": "2026-09-12T07:00:00.000Z",
+      "updatedBy": "seed"
+    }
+  },
+  {
+    "id": "sakura-mobility",
+    "account": "Sakura Mobility",
+    "region": "Japan",
+    "country": "Japan",
+    "city": "Tokyo",
+    "industry": "Automotive",
+    "opportunityArrUsd": 610000,
+    "salesStage": "Discovery",
+    "closeQuarter": "FY27 Q2",
+    "competitor": "build on AWS",
+    "useCase": "Global vehicle configurator and dealer locator across 30 markets.",
+    "sa": "Kenji Watanabe",
+    "ae": "Emily Sato",
+    "baseline": {
+      "status": "Undecided",
+      "confidence": 35,
+      "evidence": [
+        "Configurator is a heavy 3D experience; current S3/CloudFront setup struggles with personalization.",
+        "SI partner has proposed a fully custom AWS build and has strong influence with the IT department.",
+        "Digital marketing division owns the budget and wants faster campaign launches."
+      ],
+      "nextStep": "Workshop with digital marketing and the SI on a Vercel reference architecture.",
+      "updatedAt": "2026-10-27T01:00:00.000Z",
+      "updatedBy": "seed"
+    }
+  },
+  {
+    "id": "hanami-media",
+    "account": "Hanami Media",
+    "region": "Japan",
+    "country": "Japan",
+    "city": "Osaka",
+    "industry": "Media & Publishing",
+    "opportunityArrUsd": 230000,
+    "salesStage": "Closed Won",
+    "closeQuarter": "FY26 Q3",
+    "competitor": "Netlify",
+    "useCase": "News and entertainment sites with high-volume ISR article pages.",
+    "sa": "Kenji Watanabe",
+    "ae": "Emily Sato",
+    "baseline": {
+      "status": "Win",
+      "confidence": 95,
+      "evidence": [
+        "ISR with on-demand revalidation cut article publish-to-live from 8 minutes to under 5 seconds.",
+        "Editorial team adopted preview comments during the POC and asked to keep them.",
+        "Contract signed 2026-09-30 for a 2-year Enterprise term."
+      ],
+      "nextStep": "Hand over to customer success; identify expansion into the video platform team.",
+      "updatedAt": "2026-10-01T02:00:00.000Z",
+      "updatedBy": "seed"
+    }
+  }
+]
