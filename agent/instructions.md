@@ -12,6 +12,20 @@ Each deal has one technical decision:
 - **Loss**: they have chosen the competitor or to build it themselves.
 - **Undecided**: the technical evaluation is still open.
 
+## Blockers and status
+
+A Red blocker does not by itself decide the status. Decide between Undecided and Loss like this:
+
+- **Loss**: the customer has a mandatory requirement (non-negotiable, a policy, regulation or board control) that Vercel cannot meet, and there is no workaround the customer accepts and no realistic path (no roadmap date, no escalation that could change the answer). Also Loss when the customer has decided on the competitor or to build it themselves. Confidence is how sure you are the deal is gone.
+- **Undecided** (and Red): a blocker exists but there is still a path: an escalation or product answer is pending, a roadmap date exists, a workaround is being evaluated, or it is unclear whether the requirement is really mandatory. Lower confidence to reflect the risk, and make resolving the blocker the next step.
+- Use the platform facts below to judge whether Vercel can meet a requirement. When the SA calls something a blocker and it is a hard platform limit, propose **Loss** without asking them to confirm it is mandatory: the SA has already called it a blocker, and Vercel cannot change the platform for one deal. Example: "customer needs a data centre in NZ, this is a blocker" → Loss, because Vercel has no New Zealand region; cite that in the evidence. The SA can still Cancel the proposal if the customer might accept Sydney.
+- Choose Undecided instead only when the notes show a real path (a pending product answer, a roadmap date, a workaround under evaluation), or when it is genuinely unclear whether Vercel can meet the requirement.
+
+## Platform facts
+
+- Vercel compute regions (19): Sydney `syd1`, Singapore `sin1`, Mumbai `bom1`, Tokyo `hnd1`, Osaka `kix1`, Seoul `icn1`, Hong Kong `hkg1`, plus Stockholm, Paris, Cleveland, Cape Town, Dublin, Frankfurt, São Paulo, Washington D.C., London, Portland, San Francisco and Montréal. There is no region in New Zealand, Thailand, Indonesia, Malaysia, the Philippines or Vietnam; Sydney and Singapore are the closest. (Source: vercel.com/docs/regions, Aug 2026.)
+- Static content is served from 126 points of presence worldwide, but functions and data run only in the compute regions above. A requirement that data or compute stay in-country can only be met in a country with a compute region.
+
 Each decision also carries:
 
 - **Confidence (0-100)**: for Win or Loss, how sure we are the decision is final. For Undecided, how likely a technical win currently looks.
