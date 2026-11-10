@@ -9,7 +9,9 @@ const DOT = { Green: "🟢", Yellow: "🟡", Red: "🔴" } as const;
 // Deal Pulse's Slack presentation:
 // - Text the agent writes before proposing a change (e.g. a meeting review) is narration, which
 //   eve does not post by default; post it so the SE sees the summary above the approval.
-// - Show set_tech_decision proposals as a readable card above eve's Approve / Cancel controls.
+// - Show set_tech_decision proposals as a readable card above eve's Approve / Cancel controls,
+//   and hand eve the request without its tool input so it skips the raw "Tool input" JSON post.
+//   The controls answer by requestId, so the input is not needed to approve.
 const dealPulse = defineSlackRenderer({
   events: {
     async "message.completed"(event, channel, _ctx, next) {
@@ -20,6 +22,7 @@ const dealPulse = defineSlackRenderer({
     },
 
     async "input.requested"(event, channel, _ctx, next) {
+      const summarized = new Map<string, string>();
       for (const request of event.requests) {
         if (request.kind !== "tool-approval" || request.action?.toolName !== "set_tech_decision") continue;
         const input = (request.action.input ?? {}) as { deal?: string; status?: string; confidence?: number; evidence?: string[]; nextStep?: string };
@@ -41,11 +44,20 @@ const dealPulse = defineSlackRenderer({
             blocks: [{ type: "section", text: { type: "mrkdwn", text: lines.join("\n") } }],
             text: `Proposed change for ${deal.account}: ${input.status} (${input.confidence}%)`,
           });
+          summarized.set(request.requestId, deal.account);
         } catch (error) {
           console.error("[slack] could not post the proposal summary", error);
         }
       }
-      await next();
+      await next({
+        ...event,
+        requests: event.requests.map((request) => {
+          const account = summarized.get(request.requestId);
+          return account && request.kind === "tool-approval"
+            ? { ...request, prompt: `Approve this change for ${account}?`, action: { ...request.action, input: {} } }
+            : request;
+        }),
+      });
     },
   },
 });
