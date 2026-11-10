@@ -2,6 +2,8 @@ import { defineTool } from "eve/tools";
 import { z } from "zod";
 
 import { deals, getCurrentDecision, getTranscript, TECH_STATUSES } from "../lib/deals.ts";
+import { listMeetings } from "../lib/meetings.ts";
+import { getCachedSentiment } from "../lib/pulse-export.ts";
 
 export default defineTool({
   description:
@@ -26,13 +28,16 @@ export default defineTool({
         (!sa || d.sa.toLowerCase().includes(sa.toLowerCase())),
     );
 
+    const dealsWithMeetings = new Set((await listMeetings()).map((m) => m.dealId));
     const withDecisions = await Promise.all(
       matches.map(async (d) => {
         const { baseline: _baseline, ...rest } = d;
         return {
           ...rest,
-          hasCallNotes: getTranscript(d.id) !== undefined,
+          hasCallNotes: getTranscript(d.id) !== undefined || dealsWithMeetings.has(d.id),
           techDecision: await getCurrentDecision(d),
+          // The last colour you recorded; a cache, so recompute it from the sources when reporting.
+          lastRecordedSentiment: await getCachedSentiment(d.id),
         };
       }),
     );

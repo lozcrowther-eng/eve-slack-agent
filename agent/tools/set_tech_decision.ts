@@ -1,8 +1,14 @@
+import type { SessionAuthContext } from "eve/context";
 import { defineTool } from "eve/tools";
 import { always } from "eve/tools/approval";
 import { z } from "zod";
 
 import { findDeal, getCurrentDecision, saveDecision, TECH_STATUSES } from "../lib/deals.ts";
+import { isDealSe } from "../lib/se-directory.ts";
+
+function samePrincipal(a: SessionAuthContext, b: SessionAuthContext): boolean {
+  return a.authenticator === b.authenticator && a.issuer === b.issuer && a.principalType === b.principalType && a.principalId === b.principalId;
+}
 
 export default defineTool({
   description:
@@ -17,7 +23,18 @@ export default defineTool({
       .describe("Exactly 3 evidence points, strongest first, grounded in the SA update or call notes."),
     nextStep: z.string().min(1).describe("The single most important next step, with an owner and date if known."),
   }),
-  approval: always(),
+  approval: {
+    request: always(),
+    // Whoever asked for the change can settle it (the SA in Slack, or the dashboard chat), and
+    // so can the deal's SE: meeting reviews are started by the agent and DM'd to the SE.
+    response: ({ request, response }) => {
+      const deal = findDeal(String(request.toolInput?.deal ?? ""));
+      const isRequester = request.principal !== null && samePrincipal(response.principal, request.principal);
+      return isRequester || (deal !== undefined && isDealSe(response.principal, deal))
+        ? { status: "allowed" }
+        : { status: "rejected", reason: "Only the deal's SE or the person who asked for this change can approve it." };
+    },
+  },
   label: {
     start: ({ deal, status, confidence }) => `Set ${deal} to ${status} (${confidence}% confidence)`,
   },

@@ -1,6 +1,7 @@
 import { del, get, list, put } from "@vercel/blob";
 
 import { deals, getTranscript, type Sentiment, type TechDecision } from "./deals.ts";
+import { listMeetings } from "./meetings.ts";
 
 // The dashboard reads this blob (PULSE_DATA_URL). Same schema as scripts/export-pulse.mjs.
 export const PULSE_EXPORT_PATH = "exports/pulse-sample.json";
@@ -71,17 +72,23 @@ export async function clearPendingApproval(requestId: string): Promise<void> {
   await del(`${PENDING_PREFIX}${requestId}.json`);
 }
 
+export async function getCachedSentiment(dealId: string): Promise<SentimentAssessment | null> {
+  return readJson<SentimentAssessment>(`${SENTIMENT_PREFIX}${dealId}.json`);
+}
+
 export async function recordSentiment(assessments: SentimentAssessment[]): Promise<void> {
   await Promise.all(assessments.map((a) => putJson(`${SENTIMENT_PREFIX}${a.dealId}.json`, a)));
 }
 
 /** Rebuild exports/pulse-sample.json from the seed deals, stored decisions, pending approvals and cached sentiment. */
 export async function writePulseExport(): Promise<void> {
-  const [decisionBlobs, pendingBlobs, sentimentBlobs] = await Promise.all([
+  const [decisionBlobs, pendingBlobs, sentimentBlobs, meetings] = await Promise.all([
     listAll(DECISIONS_PREFIX),
     listAll(PENDING_PREFIX),
     listAll(SENTIMENT_PREFIX),
+    listMeetings(),
   ]);
+  const dealsWithMeetings = new Set(meetings.map((m) => m.dealId));
 
   const stored = new Map<string, StoredDecisions & { blobPathname: string; blobUploadedAt: string }>();
   await Promise.all(
@@ -109,7 +116,7 @@ export async function writePulseExport(): Promise<void> {
     const sentiment = sentiments.get(deal.id);
     return {
       ...deal,
-      hasCallNotes: getTranscript(deal.id) !== undefined,
+      hasCallNotes: getTranscript(deal.id) !== undefined || dealsWithMeetings.has(deal.id),
       currentDecision,
       history: record?.history ?? [],
       storage: record ? { blobPathname: record.blobPathname, blobUploadedAt: record.blobUploadedAt } : null,
