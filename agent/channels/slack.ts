@@ -35,14 +35,14 @@ const dealPulse = defineSlackRenderer({
             : null;
           const lines = [
             `*Proposed change: ${deal.account}*`,
-            `*Status:* ${current.status} → ${input.status}   *Confidence:* ${current.confidence}% → ${input.confidence}%`,
+            `*Status:* ${current.status} → ${input.status}   *Win likelihood:* ${current.confidence}% → ${input.confidence}%`,
             sentimentLine,
             ...(input.evidence ?? []).map((item) => `• ${item}`),
             input.nextStep ? `*Next step:* ${input.nextStep}` : null,
           ].filter(Boolean);
           await channel.thread.post({
             blocks: [{ type: "section", text: { type: "mrkdwn", text: lines.join("\n") } }],
-            text: `Proposed change for ${deal.account}: ${input.status} (${input.confidence}%)`,
+            text: `Proposed change for ${deal.account}: ${input.status} (${input.confidence}% win likelihood)`,
           });
           summarized.set(request.requestId, deal.account);
         } catch (error) {

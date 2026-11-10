@@ -15,11 +15,11 @@ function samePrincipal(a: SessionAuthContext, b: SessionAuthContext): boolean {
 
 export default defineTool({
   description:
-    "Record a deal's technical-decision forecast (Win / Loss / Undecided) with confidence, the top 3 evidence points and the next step. Requires human approval before it is saved.",
+    "Record a deal's technical-decision forecast (Win / Loss / Undecided) with the win likelihood, the top 3 evidence points and the next step. Requires human approval before it is saved.",
   inputSchema: z.object({
     deal: z.string().min(1).describe("Deal id (e.g. kestrel-travel)."),
     status: z.enum(TECH_STATUSES),
-    confidence: z.number().int().min(0).max(100).describe("0-100 confidence in the status."),
+    confidence: z.number().int().min(0).max(100).describe("Win likelihood 0-100: the chance of a technical win, on one scale for every status (Win 70-100, Undecided ~20-80, Loss 0-20)."),
     evidence: z
       .array(z.string().min(1))
       .length(3)
@@ -39,7 +39,7 @@ export default defineTool({
     },
   },
   label: {
-    start: ({ deal, status, confidence }) => `Set ${deal} to ${status} (${confidence}% confidence)`,
+    start: ({ deal, status, confidence }) => `Set ${deal} to ${status} (${confidence}% win likelihood)`,
   },
   async execute({ deal, status, confidence, evidence, nextStep }, ctx) {
     const match = findDeal(deal);

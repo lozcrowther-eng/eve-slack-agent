@@ -204,7 +204,7 @@
     "ae": "Kavya Nair",
     "baseline": {
       "status": "Loss",
-      "confidence": 85,
+      "confidence": 10,
       "evidence": [
         "Required all patient data and compute in an India region with a signed local hosting attestation.",
         "Amplify was bundled into an existing AWS credits program at near-zero cost.",
