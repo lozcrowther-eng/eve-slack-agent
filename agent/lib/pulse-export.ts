@@ -18,6 +18,8 @@ export interface SentimentAssessment {
   assessedAt: string;
   /** updatedAt of the decision it was computed against; a newer decision makes it stale. */
   basedOnDecisionAt: string;
+  /** The colour this assessment replaced, if any. */
+  previousSentiment?: Sentiment | null;
 }
 
 export interface PendingApproval {

@@ -2,7 +2,7 @@ import { defineTool } from "eve/tools";
 import { z } from "zod";
 
 import { findDeal, getCurrentDecision, SENTIMENTS } from "../lib/deals.ts";
-import { recordSentiment, writePulseExport } from "../lib/pulse-export.ts";
+import { getCachedSentiment, recordSentiment, writePulseExport } from "../lib/pulse-export.ts";
 
 export default defineTool({
   description:
@@ -28,8 +28,16 @@ export default defineTool({
       assessments.map(async (a) => {
         const deal = findDeal(a.deal);
         if (!deal) return null;
-        const decision = await getCurrentDecision(deal);
-        return { dealId: deal.id, sentiment: a.sentiment, reason: a.reason, source: a.source, assessedAt, basedOnDecisionAt: decision.updatedAt };
+        const [decision, previous] = await Promise.all([getCurrentDecision(deal), getCachedSentiment(deal.id)]);
+        return {
+          dealId: deal.id,
+          sentiment: a.sentiment,
+          reason: a.reason,
+          source: a.source,
+          assessedAt,
+          basedOnDecisionAt: decision.updatedAt,
+          previousSentiment: previous?.sentiment ?? null,
+        };
       }),
     );
     const valid = resolved.filter((a) => a !== null);
