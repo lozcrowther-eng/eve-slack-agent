@@ -32,7 +32,8 @@ export default defineChannel({
       if (!notes || notes.length > MAX_NOTES) return Response.json({ error: `Notes must be 1-${MAX_NOTES} characters.` }, { status: 400 });
 
       await saveMeeting({ dealId: deal.id, meetingDate, notes, loggedAt: new Date().toISOString(), loggedBy: auth.principalId });
-      await writePulseExport();
+      // The review starts first; the export (which only flags that the deal has notes) catches up.
+      ctx.waitUntil(writePulseExport());
 
       const seUserId = seSlackUserId(deal);
       const dm = await callSlackApi({ botToken: slackCredentials.botToken, operation: "conversations.open", body: { users: seUserId } });
