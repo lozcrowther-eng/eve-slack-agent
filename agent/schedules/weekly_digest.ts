@@ -1,5 +1,6 @@
 import { defineSchedule } from "eve/schedules";
 
+import { recordedAudience } from "../lib/observability.ts";
 import slack from "../channels/slack.ts";
 
 // #tech-forecast-channel in the Deal Pulse Demo workspace.
@@ -11,7 +12,7 @@ export default defineSchedule({
   cron: "0 21 * * 0",
   async run({ to, waitUntil, appAuth }) {
     waitUntil(
-      to(slack, { channelId: TECH_FORECAST_CHANNEL_ID }).send(
+      to(slack, { channelId: TECH_FORECAST_CHANNEL_ID, audience: recordedAudience }).send(
         "Post the weekly technical-decision forecast digest for the APJ SA team.",
         { auth: appAuth },
       ),

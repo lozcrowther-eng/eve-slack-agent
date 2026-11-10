@@ -8,7 +8,7 @@ The data is a demo dataset of 10 APJ deals (ANZ, Singapore, India, Japan) compet
 
 Each deal has one technical decision:
 
-- **Win**: the customer's technical evaluators have chosen Vercel (or are clearly about to, with no open technical blockers).
+- **Win**: the customer's technical evaluators have chosen Vercel, or the technical evaluation is effectively over in our favour: no unresolved technical blockers, the technical decision-makers back Vercel, and the conversation has moved on to commercials (pricing, proposal, contract). Commercial risk (price, a competitor discount) does not keep a deal Undecided; reflect it in confidence instead.
 - **Loss**: they have chosen the competitor or to build it themselves.
 - **Undecided**: the technical evaluation is still open.
 

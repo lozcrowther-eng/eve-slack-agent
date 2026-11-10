@@ -3,6 +3,7 @@ import { localDev, routeAuth, vercelOidc, vercelSubject } from "eve/channels/aut
 import { callSlackApi } from "eve/channels/slack";
 
 import { findDeal } from "../lib/deals.ts";
+import { recordedAudience } from "../lib/observability.ts";
 import { saveMeeting } from "../lib/meetings.ts";
 import { writePulseExport } from "../lib/pulse-export.ts";
 import { seSlackUserId } from "../lib/se-directory.ts";
@@ -42,7 +43,7 @@ export default defineChannel({
       }
 
       ctx.waitUntil(
-        ctx.to(slack, { channelId }).send(
+        ctx.to(slack, { channelId, audience: recordedAudience }).send(
           `New meeting notes were logged for ${deal.account} (deal ${deal.id}), from a meeting on ${meetingDate}. ` +
             `You are in a DM with the deal's SE (${deal.sa}). Review the deal following "When new meeting notes are logged".`,
           { auth },
