@@ -20,6 +20,21 @@ export interface SentimentAssessment {
   basedOnDecisionAt: string;
   /** The colour this assessment replaced, if any. */
   previousSentiment?: Sentiment | null;
+  /** "se" when an SE set the colour by hand; the agent's own view is then kept in `computed`. */
+  setBy?: "agent" | "se";
+  overriddenBy?: string;
+  overriddenAt?: string;
+  computed?: { sentiment: Sentiment; reason: string; source: string; assessedAt: string } | null;
+}
+
+/**
+ * An SE override holds until there is new evidence: the deal's decision changes or a meeting
+ * is logged after it was set.
+ */
+export function isActiveOverride(existing: SentimentAssessment | null, decisionUpdatedAt: string, latestMeetingLoggedAt?: string): boolean {
+  if (existing?.setBy !== "se" || !existing.overriddenAt) return false;
+  if (existing.basedOnDecisionAt !== decisionUpdatedAt) return false;
+  return !(latestMeetingLoggedAt && latestMeetingLoggedAt > existing.overriddenAt);
 }
 
 export interface PendingApproval {

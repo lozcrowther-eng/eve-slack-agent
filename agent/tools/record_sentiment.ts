@@ -2,11 +2,12 @@ import { defineTool } from "eve/tools";
 import { z } from "zod";
 
 import { findDeal, getCurrentDecision, SENTIMENTS } from "../lib/deals.ts";
-import { getCachedSentiment, recordSentiment, writePulseExport } from "../lib/pulse-export.ts";
+import { listMeetings } from "../lib/meetings.ts";
+import { getCachedSentiment, isActiveOverride, recordSentiment, writePulseExport, type SentimentAssessment } from "../lib/pulse-export.ts";
 
 export default defineTool({
   description:
-    "Cache the POC sentiment colours you just computed so the Deal Pulse dashboard can show them. Call it once with every deal you assessed in this turn. It does not change the forecast.",
+    "Cache the POC sentiment colours you just computed so the Deal Pulse dashboard can show them. Call it once with every deal you assessed in this turn. It does not change the forecast. A colour an SE set by hand stays in place until there is new evidence; your assessment is stored next to it.",
   inputSchema: z.object({
     assessments: z
       .array(
@@ -24,25 +25,35 @@ export default defineTool({
   },
   async execute({ assessments }) {
     const assessedAt = new Date().toISOString();
+    const meetings = await listMeetings();
     const resolved = await Promise.all(
-      assessments.map(async (a) => {
+      assessments.map(async (a): Promise<{ record: SentimentAssessment; keptOverride: boolean } | null> => {
         const deal = findDeal(a.deal);
         if (!deal) return null;
-        const [decision, previous] = await Promise.all([getCurrentDecision(deal), getCachedSentiment(deal.id)]);
+        const [decision, existing] = await Promise.all([getCurrentDecision(deal), getCachedSentiment(deal.id)]);
+        const computed = { sentiment: a.sentiment, reason: a.reason, source: a.source, assessedAt };
+        const latestMeeting = meetings.filter((m) => m.dealId === deal.id).at(-1)?.loggedAt;
+        if (existing && isActiveOverride(existing, decision.updatedAt, latestMeeting)) {
+          return { record: { ...existing, computed }, keptOverride: true };
+        }
         return {
-          dealId: deal.id,
-          sentiment: a.sentiment,
-          reason: a.reason,
-          source: a.source,
-          assessedAt,
-          basedOnDecisionAt: decision.updatedAt,
-          previousSentiment: previous?.sentiment ?? null,
+          record: {
+            dealId: deal.id,
+            ...computed,
+            basedOnDecisionAt: decision.updatedAt,
+            previousSentiment: existing?.sentiment ?? null,
+            setBy: "agent",
+          },
+          keptOverride: false,
         };
       }),
     );
-    const valid = resolved.filter((a) => a !== null);
-    await recordSentiment(valid);
+    const valid = resolved.filter((r) => r !== null);
+    await recordSentiment(valid.map((r) => r.record));
     await writePulseExport();
-    return { recorded: valid.map((a) => `${a.dealId}: ${a.sentiment}`), unknownDeals: assessments.filter((_, i) => !resolved[i]).map((a) => a.deal) };
+    return {
+      recorded: valid.map((r) => `${r.record.dealId}: ${r.record.sentiment}${r.keptOverride ? ` (SE override kept; your assessment: ${r.record.computed?.sentiment})` : ""}`),
+      unknownDeals: assessments.filter((_, i) => !resolved[i]).map((a) => a.deal),
+    };
   },
 });
