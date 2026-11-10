@@ -1,0 +1,62 @@
+[
+  {
+    "dealId": "coral-coast-insurance",
+    "sentiment": "Red",
+    "reason": "Group Risk requires customer‑managed keys (BYOK) for quote PII and rejected the proposed workaround, blocking production.",
+    "source": "call notes 2026-11-04"
+  },
+  {
+    "dealId": "hanami-media",
+    "sentiment": "Green",
+    "reason": "ISR and preview features met objectives and contract signed; no unresolved technical gaps.",
+    "source": "deal record"
+  },
+  {
+    "dealId": "harbourline-bank",
+    "sentiment": "Yellow",
+    "reason": "SCIM nested-group mapping is a product gap but an agreed interim workaround (flattened Entra groups) was accepted by security.",
+    "source": "call notes 2026-11-05"
+  },
+  {
+    "dealId": "indus-mart",
+    "sentiment": "Red",
+    "reason": "Payment gateway requires fixed Mumbai egress IPs and the gateway team will not accept a workaround; checkout cannot go live until resolved.",
+    "source": "call notes 2026-11-07"
+  },
+  {
+    "dealId": "kestrel-travel",
+    "sentiment": "Green",
+    "reason": "Load test p95 stayed under 220ms at 6x peak and previews wired into their workflow; no unresolved technical gaps.",
+    "source": "call notes 2026-11-06"
+  },
+  {
+    "dealId": "kowhai-energy",
+    "sentiment": "Green",
+    "reason": "POC showed edge p95 improvements and the architecture review board approved Vercel with no unresolved technical gaps.",
+    "source": "deal record"
+  },
+  {
+    "dealId": "merlion-logistics",
+    "sentiment": "Yellow",
+    "reason": "Thailand data‑residency is a gap but a validated workaround (keep TH PII in Bangkok API and render TH pages without PII) is in progress pending TH IT sign-off.",
+    "source": "call notes 2026-11-04"
+  },
+  {
+    "dealId": "nilgiri-health",
+    "sentiment": "Red",
+    "reason": "Requirement for all patient data and compute in an India region with a signed local attestation caused the deal loss and remains a blocker.",
+    "source": "deal record"
+  },
+  {
+    "dealId": "sakura-mobility",
+    "sentiment": "Yellow",
+    "reason": "3D asset size is a gap but workaround using Vercel Blob streaming was validated in a spike and a pilot is planned.",
+    "source": "call notes 2026-11-05"
+  },
+  {
+    "dealId": "straits-pay",
+    "sentiment": "Green",
+    "reason": "MAS TRM controls mapped with no gaps and CTO chose Vercel; no unresolved technical issues reported.",
+    "source": "deal record"
+  }
+]
