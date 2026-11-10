@@ -40,13 +40,16 @@ if (process.argv.includes("--capture")) {
   process.exit(0);
 }
 
-for (const prefix of ["tech-decisions/", "pending-approvals/", "call-notes/", "sentiment/"]) {
+// Baseline colours are overwritten in place (below), so the dashboard never sees a gap; only
+// sentiment for deals missing from the baseline is deleted.
+const hasBaseline = existsSync(BASELINE);
+for (const prefix of ["tech-decisions/", "pending-approvals/", "call-notes/", ...(hasBaseline ? [] : ["sentiment/"])]) {
   const blobs = await listAll(prefix);
   if (blobs.length) await del(blobs.map((b) => b.url));
   console.log(`Deleted ${blobs.length} blob(s) under ${prefix}`);
 }
 
-if (existsSync(BASELINE)) {
+if (hasBaseline) {
   const assessedAt = new Date().toISOString();
   const baseline = JSON.parse(readFileSync(BASELINE, "utf8"));
   await Promise.all(
@@ -62,6 +65,9 @@ if (existsSync(BASELINE)) {
       });
     }),
   );
+  const keep = new Set(baseline.map((entry) => `sentiment/${entry.dealId}.json`));
+  const extra = (await listAll("sentiment/")).filter((b) => !keep.has(b.pathname));
+  if (extra.length) await del(extra.map((b) => b.url));
   console.log(`Restored ${baseline.length} baseline sentiment colours.`);
 } else {
   console.log("No baseline captured yet; the dashboard will ask the agent to assess every deal.");

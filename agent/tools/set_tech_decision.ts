@@ -4,7 +4,10 @@ import { always } from "eve/tools/approval";
 import { z } from "zod";
 
 import { findDeal, getCurrentDecision, saveDecision, TECH_STATUSES } from "../lib/deals.ts";
+import { getCachedSentiment, recordSentiment } from "../lib/pulse-export.ts";
 import { isDealSe } from "../lib/se-directory.ts";
+
+const FRESH_SENTIMENT_MS = 30 * 60 * 1000;
 
 function samePrincipal(a: SessionAuthContext, b: SessionAuthContext): boolean {
   return a.authenticator === b.authenticator && a.issuer === b.issuer && a.principalType === b.principalType && a.principalId === b.principalId;
@@ -52,6 +55,13 @@ export default defineTool({
       updatedBy: ctx.session.auth.current?.principalId ?? "unknown",
     };
     await saveDecision(match, decision);
+
+    // The colour you recorded while preparing this proposal already reflects its evidence, so
+    // carry it over to the new decision instead of leaving it stale (saves a reassessment).
+    const sentiment = await getCachedSentiment(match.id);
+    if (sentiment && sentiment.setBy !== "se" && sentiment.basedOnDecisionAt === previous.updatedAt && Date.now() - Date.parse(sentiment.assessedAt) < FRESH_SENTIMENT_MS) {
+      await recordSentiment([{ ...sentiment, basedOnDecisionAt: decision.updatedAt }]);
+    }
 
     return {
       saved: true,
